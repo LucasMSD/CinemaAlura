@@ -1,4 +1,5 @@
-﻿using FilmesAPI.Models;
+﻿using FilmesAPI.Data;
+using FilmesAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FilmesAPI.Controllers
@@ -7,28 +8,31 @@ namespace FilmesAPI.Controllers
     [Route("[controller]")]
     public class FilmeController : ControllerBase  
     {
-        private static List<Filme> filmes = new List<Filme>();
-        private static int id = 1;
+        private FilmeContext _context;
+
+        public FilmeController(FilmeContext context)
+        {
+            _context = context;
+        }
 
         [HttpPost]
         public IActionResult AdicionarFilme([FromBody] Filme filme)
         {
-            filme.Id = id++;
-            filmes.Add(filme);
-
+            _context.Filmes.Add(filme);
+            _context.SaveChanges();
             return CreatedAtAction(nameof(RecupararFilmesPorId), new { Id = filme.Id }, filme);
         }
 
         [HttpGet]
         public IActionResult RecuperarFilmes()
         {
-            return Ok(filmes);
+            return Ok(_context.Filmes);
         }
 
         [HttpGet("{id}")]
         public IActionResult RecupararFilmesPorId(int id)
         {
-            var filme = filmes.FirstOrDefault(x => x.Id == id);
+            var filme = _context.Filmes.Where(x => x.Id == id).FirstOrDefault();
 
             if (filme == null)
             {
@@ -36,6 +40,43 @@ namespace FilmesAPI.Controllers
             }
 
             return Ok(filme);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult AtualizarFilmePorId([FromBody] Filme filme, int id)
+        {
+            var filmeAntigo = _context.Filmes.Where(x => x.Id == id).FirstOrDefault();
+
+            if (filmeAntigo == null)
+            {
+                return NotFound();
+            }
+
+            filmeAntigo.Titulo = filme.Titulo;
+            filmeAntigo.Diretor = filme.Diretor;
+            filmeAntigo.Genero = filme.Genero;
+            filmeAntigo.Duracao = filme.Duracao;
+
+            _context.Update(filmeAntigo);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+        
+        [HttpDelete("{id}")]
+        public IActionResult DeletarFilmePorId(int id)
+        {
+            var filme = _context.Filmes.Where(x => x.Id == id).FirstOrDefault();
+
+            if (filme == null)
+            {
+                return NotFound();
+            }
+
+            _context.Filmes.Remove(filme);
+            _context.SaveChanges();
+
+            return NoContent();
         }
     }
 }
