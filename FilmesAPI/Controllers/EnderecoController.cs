@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FilmesAPI.Data;
-using FilmesAPI.Data.Dtos.Endereco;
+using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,7 +46,7 @@ namespace FilmesAPI.Controllers
         [HttpGet]
         public IActionResult RecuperarEnderecos()
         {
-            return Ok(_context.Enderecos);
+            return Ok(_context.Enderecos.ToList());
         }
 
         [HttpPut("{id}")]

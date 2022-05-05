@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FilmesAPI.Data;
-using FilmesAPI.Data.Dtos.Cinema;
+using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,7 +46,7 @@ namespace FilmesAPI.Controllers
         [HttpGet]
         public IActionResult RecuperarCinemas()
         {
-            return Ok(_context.Cinemas);
+            return Ok(_context.Cinemas.ToList());
         }
 
         [HttpPut("{id}")]

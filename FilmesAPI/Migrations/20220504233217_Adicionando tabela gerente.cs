@@ -5,22 +5,22 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FilmesAPI.Migrations
 {
-    public partial class CriandoTabelaCinema : Migration
+    public partial class Adicionandotabelagerente : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Cinemas",
+                name: "Gerentes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: false)
+                    Nome = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cinemas", x => x.Id);
+                    table.PrimaryKey("PK_Gerentes", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
         }
@@ -28,7 +28,7 @@ namespace FilmesAPI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Cinemas");
+                name: "Gerentes");
         }
     }
 }

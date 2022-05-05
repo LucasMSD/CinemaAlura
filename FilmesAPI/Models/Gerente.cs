@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FilmesAPI.Data.Dtos
+namespace FilmesAPI.Models
 {
-    public class UpdateCinemaDto
+    public class Gerente
     {
         [Key]
         [Required]
