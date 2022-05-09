@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using FilmesAPI.Data;
-using FilmesAPI.Data.Dtos;
-using FilmesAPI.Models;
+﻿using FilmesAPI.Data.Dtos;
 using FilmesAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,9 +24,9 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult RecuperarCinemaPorId(int id)
+        public IActionResult RecuperarCinemaPorId(int cinemaId)
         {
-            var readCinemaDto = _service.RecuperarCinemaPorId(id);
+            var readCinemaDto = _service.RecuperarCinemaPorId(cinemaId);
 
             return Ok(readCinemaDto);
         }
@@ -43,17 +40,17 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult AtualizarCinemaPorId(int id, [FromBody] UpdateCinemaDto updateCinemaDto)
+        public IActionResult AtualizarCinemaPorId(int cinemaId, [FromBody] UpdateCinemaDto updateCinemaDto)
         {
-            _service.AtualizarCinemaPorId(id, updateCinemaDto);
+            _service.AtualizarCinemaPorId(cinemaId, updateCinemaDto);
 
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeletarCinemaPorId(int id)
+        public IActionResult DeletarCinemaPorId(int cinemaId)
         {
-            _service.DeletarCinemaPorId(id);
+            _service.DeletarCinemaPorId(cinemaId);
 
             return NoContent();
         }

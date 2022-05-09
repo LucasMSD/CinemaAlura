@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using FilmesAPI.Data;
-using FilmesAPI.Data.Dtos;
-using FilmesAPI.Models;
+﻿using FilmesAPI.Data.Dtos;
 using FilmesAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +20,7 @@ namespace FilmesAPI.Controllers
         {
             var filme = _service.AdicionarFilme(createFilmeDto);
 
-            return CreatedAtAction(nameof(RecuperarFilmePorId), new { Id = filme.Id}, filme);
+            return CreatedAtAction(nameof(RecuperarFilmePorId), new { Id = filme.Id }, filme);
         }
 
         [HttpGet]
@@ -40,9 +37,9 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult RecuperarFilmePorId(int id)
+        public IActionResult RecuperarFilmePorId(int filmeId)
         {
-            var readFilmeDto = _service.RecuperarFilmePorId(id);
+            var readFilmeDto = _service.RecuperarFilmePorId(filmeId);
 
             if (readFilmeDto == null)
             {
@@ -53,17 +50,17 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult AtualizarFilmePorId(int id, [FromBody] UpdateFilmeDto updateFilmeDto)
+        public IActionResult AtualizarFilmePorId(int filmeId, [FromBody] UpdateFilmeDto updateFilmeDto)
         {
-            _service.AtualizarFilmePorId(id, updateFilmeDto);
+            _service.AtualizarFilmePorId(filmeId, updateFilmeDto);
 
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeletarFilmePorId(int id)
+        public IActionResult DeletarFilmePorId(int filmeId)
         {
-            _service.DeletarFilmePorId(id);
+            _service.DeletarFilmePorId(filmeId);
 
             return NoContent();
         }
