@@ -47,9 +47,9 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeletarEnderecoPorId(int idenderecoId)
+        public IActionResult DeletarEnderecoPorId(int enderecoId)
         {
-            _service.DeletarEnderecoPorId(idenderecoId);
+            _service.DeletarEnderecoPorId(enderecoId);
 
             return NoContent();
         }
