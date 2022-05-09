@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using FilmesAPI.Data;
-using FilmesAPI.Data.Dtos;
-using FilmesAPI.Models;
+﻿using FilmesAPI.Data.Dtos;
 using FilmesAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,7 +48,7 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult  DeletarGerentePorId(int gerenteId)
+        public IActionResult DeletarGerentePorId(int gerenteId)
         {
             _service.DeletarGerentePorId(gerenteId);
 
