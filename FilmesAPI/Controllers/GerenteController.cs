@@ -30,7 +30,7 @@ namespace FilmesAPI.Controllers
             return CreatedAtAction(nameof(RecuperarGerentePorId), new { Id = gerente.Id }, gerente);
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public IActionResult RecuperarGerentePorId(int id)
         {
             var gerente = _context.Gerentes.Where(x => x.Id == id).FirstOrDefault();
@@ -49,6 +49,22 @@ namespace FilmesAPI.Controllers
         public IActionResult RecuperarGerentes()
         {
             return Ok(_context.Gerentes.ToList());
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult  DeletarGerentePorId(int id)
+        {
+            var gerente = _context.Gerentes.Where(x => x.Id == id).FirstOrDefault();
+
+            if (gerente == null)
+            {
+                return NotFound();
+            }
+
+            _context.Remove(gerente);
+            _context.SaveChanges();
+
+            return NoContent();
         }
     }
 }
