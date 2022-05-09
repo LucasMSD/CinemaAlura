@@ -19,6 +19,7 @@ namespace FilmesAPI.Profiles
                         cinema.Endereco,
                         cinema.EnderecoId
                     })));
+            CreateMap<UpdateGerenteDto, Gerente>();
         }
     }
 }
