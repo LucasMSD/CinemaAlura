@@ -2,6 +2,7 @@
 using FilmesAPI.Data;
 using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;
+using FilmesAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FilmesAPI.Controllers
@@ -10,29 +11,25 @@ namespace FilmesAPI.Controllers
     [Route("[controller]")]
     public class FilmeController : ControllerBase
     {
-        private AppDbContext _context;
-        private IMapper _mapper;
+        private FilmeService _service;
 
-        public FilmeController(AppDbContext context, IMapper mapper)
+        public FilmeController(FilmeService service)
         {
-            _context = context;
-            _mapper = mapper;
+            _service = service;
         }
 
         [HttpPost]
         public IActionResult AdicionarFilme([FromBody] CreateFilmeDto createFilmeDto)
         {
-            Filme filme = _mapper.Map<Filme>(createFilmeDto);
+            var filme = _service.AdicionarFilme(createFilmeDto);
 
-            _context.Filmes.Add(filme);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(RecupararFilmesPorId), new { Id = filme.Id }, filme);
+            return CreatedAtAction(nameof(RecuperarFilmePorId), new { Id = filme.Id}, filme);
         }
 
         [HttpGet]
         public IActionResult RecuperarFilmes([FromQuery] int? classificacaoEtaria)
         {
-            var readFilmeDtoList = _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Where(x => classificacaoEtaria == null || x.ClassificacaoEtaria <= classificacaoEtaria));
+            var readFilmeDtoList = _service.RecuperarFilmes(classificacaoEtaria);
 
             if (!readFilmeDtoList.Any())
             {
@@ -43,32 +40,22 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult RecupararFilmesPorId(int id)
+        public IActionResult RecuperarFilmePorId(int id)
         {
-            var filme = _context.Filmes.Where(x => x.Id == id).FirstOrDefault();
+            var readFilmeDto = _service.RecuperarFilmePorId(id);
 
-            if (filme == null)
+            if (readFilmeDto == null)
             {
                 return NotFound();
             }
 
-            ReadFilmeDto readFilmeDto = _mapper.Map<ReadFilmeDto>(filme);
-            readFilmeDto.HoraDaConsulta = DateTime.Now;
             return Ok(readFilmeDto);
         }
 
         [HttpPut("{id}")]
-        public IActionResult AtualizarFilmePorId([FromBody] UpdateFilmeDto updateFilmeDto, int id)
+        public IActionResult AtualizarFilmePorId(int id, [FromBody] UpdateFilmeDto updateFilmeDto)
         {
-            var filme = _context.Filmes.Where(x => x.Id == id).FirstOrDefault();
-
-            if (filme == null)
-            {
-                return NotFound();
-            }
-
-            _mapper.Map(updateFilmeDto, filme);
-            _context.SaveChanges();
+            _service.AtualizarFilmePorId(id, updateFilmeDto);
 
             return NoContent();
         }
@@ -76,15 +63,7 @@ namespace FilmesAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeletarFilmePorId(int id)
         {
-            var filme = _context.Filmes.Where(x => x.Id == id).FirstOrDefault();
-
-            if (filme == null)
-            {
-                return NotFound();
-            }
-
-            _context.Filmes.Remove(filme);
-            _context.SaveChanges();
+            _service.DeletarFilmePorId(id);
 
             return NoContent();
         }
