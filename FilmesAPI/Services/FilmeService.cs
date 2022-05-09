@@ -50,9 +50,9 @@ namespace FilmesAPI.Services
             return readFilmeDtoList;
         }
 
-        public void AtualizarFilmePorId(int id, UpdateFilmeDto updateFilmeDto)
+        public void AtualizarFilmePorId(int filmeId, UpdateFilmeDto updateFilmeDto)
         {
-            var filme = _context.Filmes.Where(x => x.Id == id).FirstOrDefault();
+            var filme = _context.Filmes.Where(x => x.Id == filmeId).FirstOrDefault();
 
             if (filme == null)
             {
@@ -66,9 +66,9 @@ namespace FilmesAPI.Services
             return;
         }
 
-        public void DeletarFilmePorId(int id)
+        public void DeletarFilmePorId(int filmeId)
         {
-            var filme = _context.Filmes.Where(x => x.Id == id).FirstOrDefault();
+            var filme = _context.Filmes.Where(x => x.Id == filmeId).FirstOrDefault();
 
             if (filme == null)
             {
