@@ -18,41 +18,51 @@ namespace FilmesAPI.Controllers
         [HttpPost]
         public IActionResult AdicionarFilme([FromBody] CreateFilmeDto createFilmeDto)
         {
-            var filme = _service.AdicionarFilme(createFilmeDto);
+            var result = _service.AdicionarFilme(createFilmeDto);
 
-            return CreatedAtAction(nameof(RecuperarFilmePorId), new { Id = filme.Id }, filme);
-        }
-
-        [HttpGet]
-        public IActionResult RecuperarFilmes([FromQuery] int? classificacaoEtaria)
-        {
-            var readFilmeDtoList = _service.RecuperarFilmes(classificacaoEtaria);
-
-            if (!readFilmeDtoList.Any())
+            if (result.IsFailed)
             {
                 return NotFound();
             }
 
-            return Ok(readFilmeDtoList);
+            return CreatedAtAction(nameof(RecuperarFilmePorId), new { Id = result.Value.Id }, result.Value);
         }
 
         [HttpGet("{id}")]
         public IActionResult RecuperarFilmePorId(int filmeId)
         {
-            var readFilmeDto = _service.RecuperarFilmePorId(filmeId);
+            var result = _service.RecuperarFilmePorId(filmeId);
 
-            if (readFilmeDto == null)
+            if (result.IsFailed)
             {
                 return NotFound();
             }
 
-            return Ok(readFilmeDto);
+            return Ok(result.Value);
+        }
+
+        [HttpGet]
+        public IActionResult RecuperarFilmes([FromQuery] int? classificacaoEtaria)
+        {
+            var result = _service.RecuperarFilmes(classificacaoEtaria);
+
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
+
+            return Ok(result.Value);
         }
 
         [HttpPut("{id}")]
         public IActionResult AtualizarFilmePorId(int filmeId, [FromBody] UpdateFilmeDto updateFilmeDto)
         {
-            _service.AtualizarFilmePorId(filmeId, updateFilmeDto);
+            var result = _service.AtualizarFilmePorId(filmeId, updateFilmeDto);
+
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }
@@ -60,7 +70,12 @@ namespace FilmesAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeletarFilmePorId(int filmeId)
         {
-            _service.DeletarFilmePorId(filmeId);
+            var result = _service.DeletarFilmePorId(filmeId);
+
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }

@@ -18,38 +18,64 @@ namespace FilmesAPI.Controllers
         [HttpPost]
         public IActionResult AdicionarEndereco([FromBody] CreateEnderecoDto createEnderecoDto)
         {
-            var endereco = _service.AdicionarEndereco(createEnderecoDto);
+            var result = _service.AdicionarEndereco(createEnderecoDto);
 
-            return CreatedAtAction(nameof(RecuperarEnderecoPorId), new { Id = endereco.Id }, endereco);
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
+
+            return CreatedAtAction(nameof(RecuperarEnderecoPorId), new { Id = result.Value.Id }, result.Value);
         }
 
         [HttpGet("{id}")]
         public IActionResult RecuperarEnderecoPorId(int enderecoId)
         {
-            var readEnderecoDto = _service.RecuperarEnderecoPorId(enderecoId);
+            var result = _service.RecuperarEnderecoPorId(enderecoId);
 
-            return Ok(readEnderecoDto);
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
+
+            return Ok(result.Value);
         }
 
         [HttpGet]
         public IActionResult RecuperarEnderecos()
         {
-            var readEnderecoDtoList = _service.RecuperarEnderecos();
+            var result = _service.RecuperarEnderecos();
 
-            return Ok(readEnderecoDtoList);
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
         }
 
         [HttpPut("{id}")]
         public IActionResult AtualizarEnderecoPorId(int enderecoId, [FromBody] UpdateEnderecoDto updateEnderecoDto)
         {
-            _service.AtualizarEnderecoPorId(enderecoId, updateEnderecoDto);
+            var result = _service.AtualizarEnderecoPorId(enderecoId, updateEnderecoDto);
+
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
+
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeletarEnderecoPorId(int enderecoId)
         {
-            _service.DeletarEnderecoPorId(enderecoId);
+            var result = _service.DeletarEnderecoPorId(enderecoId);
+
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }

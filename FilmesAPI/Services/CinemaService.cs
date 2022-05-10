@@ -2,6 +2,7 @@
 using FilmesAPI.Data;
 using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;
+using FluentResults;
 
 namespace FilmesAPI.Services
 {
@@ -16,71 +17,71 @@ namespace FilmesAPI.Services
             _mapper = mapper;
         }
 
-        public Cinema AdicionarCinema(CreateCinemaDto createCinemaDto)
+        public Result<Cinema> AdicionarCinema(CreateCinemaDto createCinemaDto)
         {
             var cinema = _mapper.Map<Cinema>(createCinemaDto);
 
             _context.Cinemas.Add(cinema);
             _context.SaveChanges();
 
-            return cinema;
+            return Result.Ok(cinema);
         }
 
-        public ReadCinemaDto? RecuperarCinemaPorId(int cinemaId)
+        public Result<ReadCinemaDto> RecuperarCinemaPorId(int cinemaId)
         {
             var filme = _context.Cinemas.Where(x => x.Id == cinemaId).FirstOrDefault();
 
             if (filme == null)
             {
-                return null;
+                return Result.Fail("Cinema não encontrado.");
             }
 
             var readCinemaDto = _mapper.Map<ReadCinemaDto>(filme);
 
-            return readCinemaDto;
+            return Result.Ok(readCinemaDto);
         }
 
-        public IEnumerable<ReadCinemaDto> RecuperarCinemas(string filmeTitulo)
+        public Result<List<ReadCinemaDto>> RecuperarCinemas(string filmeTitulo)
         {
             //_context.Cinemas.Where(x => x.Sessoes.Any(sessao => sessao.Filme.Titulo == filmeTitulo));
-            var filmes = from cinema in _context.Cinemas
+            var cinemas = from cinema in _context.Cinemas
                          where cinema.Sessoes.Any(sessao => string.IsNullOrEmpty(filmeTitulo) || sessao.Filme.Titulo == filmeTitulo)
                          select cinema;
 
-            var readCinemaDtoList = _mapper.Map<List<ReadCinemaDto>>(filmes);
+            var readCinemaDtoList = _mapper.Map<List<ReadCinemaDto>>(cinemas);
 
-            return readCinemaDtoList;
+            return Result.Ok(readCinemaDtoList);
         }
 
-        public void AtualizarCinemaPorId(int cinemaId, UpdateCinemaDto updateCinemaDto)
+        public Result AtualizarCinemaPorId(int cinemaId, UpdateCinemaDto updateCinemaDto)
         {
             var cinema = _context.Cinemas.Where(x => x.Id == cinemaId).FirstOrDefault();
 
             if (cinema == null)
             {
-                return;
+                return Result.Fail("Cinema não encontrado.");
             }
 
             _mapper.Map(updateCinemaDto, cinema);
 
             _context.SaveChanges();
 
-            return;
+            return Result.Ok();
         }
 
-        public void DeletarCinemaPorId(int cinemaId)
+        public Result DeletarCinemaPorId(int cinemaId)
         {
             var cinema = _context.Cinemas.Where(x => x.Id == cinemaId).FirstOrDefault();
 
             if (cinema == null)
             {
-                return;
+                return Result.Fail("Cinema não encontrado.");
             }
 
             _context.Cinemas.Remove(cinema);
             _context.SaveChanges();
 
-            return;
+            return Result.Ok();
         }
     }
 }

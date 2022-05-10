@@ -18,31 +18,51 @@ namespace FilmesAPI.Controllers
         [HttpPost]
         public IActionResult AdicionarSessao([FromBody] CreateSessaoDto createSessaoDto)
         {
-            var sessao = _service.AdicionarSessao(createSessaoDto);
+            var result = _service.AdicionarSessao(createSessaoDto);
 
-            return CreatedAtAction(nameof(RecuperarSessaoPorId), new { Id = sessao.Id }, sessao);
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
+
+            return CreatedAtAction(nameof(RecuperarSessaoPorId), new { Id = result.Value.Id }, result.Value);
         }
 
         [HttpGet("{id}")]
         public IActionResult RecuperarSessaoPorId(int sessaoId)
         {
-            var readSessaoDto = _service.RecuperarSessaoPorId(sessaoId);
+            var result = _service.RecuperarSessaoPorId(sessaoId);
 
-            return Ok(readSessaoDto);
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
+
+            return Ok(result.Value);
         }
 
         [HttpGet]
         public IActionResult RecuperarSessoes()
         {
-            var readSessaoDtoList = _service.RecuperarSessoes();
+            var result = _service.RecuperarSessoes();
 
-            return Ok(readSessaoDtoList);
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
+
+            return Ok(result.Value);
         }
 
         [HttpPut("{id}")]
         public IActionResult AtualizarSessaoPorId(int sessaoId, [FromBody] UpdateSessaoDto updateSessaoDto)
         {
-            _service.AtualizarSessaoPorId(sessaoId, updateSessaoDto);
+            var result = _service.AtualizarSessaoPorId(sessaoId, updateSessaoDto);
+
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }
@@ -50,7 +70,12 @@ namespace FilmesAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeletarSessaoPorId(int sessaoId)
         {
-            _service.DeletarSessaoPorId(sessaoId);
+            var result = _service.DeletarSessaoPorId(sessaoId);
+
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }

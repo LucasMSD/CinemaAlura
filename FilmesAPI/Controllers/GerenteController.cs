@@ -18,31 +18,51 @@ namespace FilmesAPI.Controllers
         [HttpPost]
         public IActionResult AdicionarGerente([FromBody] CreateGerenteDto createGerenteDto)
         {
-            var gerente = _service.AdicionarGerente(createGerenteDto);
+            var result = _service.AdicionarGerente(createGerenteDto);
 
-            return CreatedAtAction(nameof(RecuperarGerentePorId), new { Id = gerente.Id }, gerente);
+            if (result.IsFailed)
+            {
+                NotFound();
+            }
+
+            return CreatedAtAction(nameof(RecuperarGerentePorId), new { Id = result.Value.Id }, result.Value);
         }
 
         [HttpGet("{id}")]
         public IActionResult RecuperarGerentePorId(int gerenteId)
         {
-            var readGerenteDto = _service.RecuperarGerentePorId(gerenteId);
+            var result = _service.RecuperarGerentePorId(gerenteId);
 
-            return Ok(readGerenteDto);
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
+
+            return Ok(result.Value);
         }
 
         [HttpGet]
         public IActionResult RecuperarGerentes()
         {
-            var readGerenteDtoList = _service.RecuperarGerentes();
+            var result = _service.RecuperarGerentes();
 
-            return Ok(readGerenteDtoList);
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
+
+            return Ok(result.Value);
         }
 
         [HttpPut("{id}")]
         public IActionResult AtualizarGerentePorId(int gerenteId, [FromBody] UpdateGerenteDto udpateGerenteDto)
         {
-            _service.AtualizarGerentePorId(gerenteId, udpateGerenteDto);
+            var result = _service.AtualizarGerentePorId(gerenteId, udpateGerenteDto);
+
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }
@@ -50,7 +70,12 @@ namespace FilmesAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeletarGerentePorId(int gerenteId)
         {
-            _service.DeletarGerentePorId(gerenteId);
+            var result = _service.DeletarGerentePorId(gerenteId);
+
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }

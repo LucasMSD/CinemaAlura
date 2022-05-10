@@ -2,6 +2,7 @@
 using FilmesAPI.Data;
 using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;
+using FluentResults;
 
 namespace FilmesAPI.Services
 {
@@ -16,68 +17,68 @@ namespace FilmesAPI.Services
             _mapper = mapper;
         }
 
-        public Sessao AdicionarSessao(CreateSessaoDto createSessaoDto)
+        public Result<Sessao> AdicionarSessao(CreateSessaoDto createSessaoDto)
         {
             var sessao = _mapper.Map<Sessao>(createSessaoDto);
 
             _context.Sessoes.Add(sessao);
             _context.SaveChanges();
 
-            return sessao;
+            return Result.Ok(sessao);
         }
 
-        public ReadSessaoDto? RecuperarSessaoPorId(int sessaoId)
+        public Result<ReadSessaoDto> RecuperarSessaoPorId(int sessaoId)
         {
             var sessao = _context.Sessoes.Where(x => x.Id == sessaoId).FirstOrDefault();
 
             if (sessao == null)
             {
-                return null;
+                return Result.Fail("Sessao não encontrada.");
             }
 
             var readSessaoDto = _mapper.Map<ReadSessaoDto>(sessao);
 
-            return readSessaoDto;
+            return Result.Ok(readSessaoDto);
         }
 
-        public IEnumerable<ReadSessaoDto> RecuperarSessoes()
+        public Result<List<ReadSessaoDto>> RecuperarSessoes()
         {
             var sessoes = _context.Sessoes.ToList();
 
             var readSessaoDtoList = _mapper.Map<List<ReadSessaoDto>>(sessoes);
 
-            return readSessaoDtoList;
+            return Result.Ok(readSessaoDtoList);
         }
 
-        public void AtualizarSessaoPorId(int sessaoId, UpdateSessaoDto updateSessaoDto)
+        public Result AtualizarSessaoPorId(int sessaoId, UpdateSessaoDto updateSessaoDto)
         {
             var sessao = _context.Sessoes.Where(x => x.Id == sessaoId).FirstOrDefault();
 
             if (sessao == null)
             {
-                return;
+                return Result.Fail("Sessao não encontrada.");
             }
 
             _mapper.Map(updateSessaoDto, sessao);
 
             _context.SaveChanges();
 
-            return;
+            return Result.Ok();
         }
 
-        public void DeletarSessaoPorId(int sessaoId)
+        public Result DeletarSessaoPorId(int sessaoId)
         {
             var sessao = _context.Sessoes.Where(x => x.Id == sessaoId).FirstOrDefault();
 
             if (sessao == null)
             {
-                return;
+                return Result.Fail("Sessao não encontrada.");
             }
 
             _context.Sessoes.Remove(sessao);
             _context.SaveChanges();
 
-            return;
+            return Result.Ok();
         }
     }
 }

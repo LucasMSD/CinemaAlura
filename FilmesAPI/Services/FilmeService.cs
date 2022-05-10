@@ -2,6 +2,7 @@
 using FilmesAPI.Data;
 using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;
+using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FilmesAPI.Services
@@ -17,68 +18,68 @@ namespace FilmesAPI.Services
             _mapper = mapper;
         }
 
-        public Filme AdicionarFilme(CreateFilmeDto createFilmeDto)
+        public Result<Filme> AdicionarFilme(CreateFilmeDto createFilmeDto)
         {
             var filme = _mapper.Map<Filme>(createFilmeDto);
 
             _context.Filmes.Add(filme);
             _context.SaveChanges();
 
-            return filme;
+            return Result.Ok(filme);
         }
 
-        public ReadFilmeDto? RecuperarFilmePorId(int filmeId)
+        public Result<ReadFilmeDto> RecuperarFilmePorId(int filmeId)
         {
             var filme = _context.Filmes.Where(x => x.Id == filmeId).FirstOrDefault();
 
             if (filme == null)
             {
-                return null;
+                return Result.Fail("Filme não encontrado.");
             }
 
             var readFilmeDto = _mapper.Map<ReadFilmeDto>(filme);
 
-            return readFilmeDto;
+            return Result.Ok(readFilmeDto);
         }
 
-        public IEnumerable<ReadFilmeDto> RecuperarFilmes(int? classificacaoEtaria)
+        public Result<List<ReadFilmeDto>>RecuperarFilmes(int? classificacaoEtaria)
         {
             var filmes = _context.Filmes.Where(x => classificacaoEtaria == null || x.ClassificacaoEtaria == classificacaoEtaria);
 
             var readFilmeDtoList = _mapper.Map<List<ReadFilmeDto>>(filmes);
 
-            return readFilmeDtoList;
+            return Result.Ok(readFilmeDtoList);
         }
 
-        public void AtualizarFilmePorId(int filmeId, UpdateFilmeDto updateFilmeDto)
+        public Result AtualizarFilmePorId(int filmeId, UpdateFilmeDto updateFilmeDto)
         {
             var filme = _context.Filmes.Where(x => x.Id == filmeId).FirstOrDefault();
 
             if (filme == null)
             {
-                return;
+                return Result.Fail("Filme não encontrado.");
             }
 
             _mapper.Map(updateFilmeDto, filme);
 
             _context.SaveChanges();
 
-            return;
+            return Result.Ok();
         }
 
-        public void DeletarFilmePorId(int filmeId)
+        public Result DeletarFilmePorId(int filmeId)
         {
             var filme = _context.Filmes.Where(x => x.Id == filmeId).FirstOrDefault();
 
             if (filme == null)
             {
-                return;
+                return Result.Fail("Filme não encontrado.");
             }
 
             _context.Remove(filme);
             _context.SaveChanges();
 
-            return;
+            return Result.Ok();
         }
     }
 }

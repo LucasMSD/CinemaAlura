@@ -2,6 +2,7 @@
 using FilmesAPI.Data;
 using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;
+using FluentResults;
 
 namespace FilmesAPI.Services
 {
@@ -16,68 +17,68 @@ namespace FilmesAPI.Services
             _mapper = mapper;
         }
 
-        public Gerente AdicionarGerente(CreateGerenteDto createGerenteDto)
+        public Result<Gerente> AdicionarGerente(CreateGerenteDto createGerenteDto)
         {
             var gerente = _mapper.Map<Gerente>(createGerenteDto);
 
             _context.Gerentes.Add(gerente);
             _context.SaveChanges();
 
-            return gerente;
+            return Result.Ok(gerente);
         }
 
-        public ReadGerenteDto? RecuperarGerentePorId(int gerenteId)
+        public Result<ReadGerenteDto> RecuperarGerentePorId(int gerenteId)
         {
             var gerente = _context.Gerentes.Where(x => x.Id == gerenteId).FirstOrDefault();
 
             if (gerente == null)
             {
-                return null;
+                return Result.Fail("Gerente não encontrado.");
             }
 
             var readGerenteDto = _mapper.Map<ReadGerenteDto>(gerente);
 
-            return readGerenteDto;
+            return Result.Ok(readGerenteDto);
         }
 
-        public IEnumerable<ReadGerenteDto> RecuperarGerentes()
+        public Result<List<ReadGerenteDto>> RecuperarGerentes()
         {
             var gerentes = _context.Gerentes.ToList();
 
             var readGerenteDtoList = _mapper.Map<List<ReadGerenteDto>>(gerentes);
 
-            return readGerenteDtoList;
+            return Result.Ok(readGerenteDtoList);
         }
 
-        public void AtualizarGerentePorId(int gerenteId, UpdateGerenteDto updateGerenteDto)
+        public Result AtualizarGerentePorId(int gerenteId, UpdateGerenteDto updateGerenteDto)
         {
             var gerente = _context.Gerentes.Where(x => x.Id == gerenteId).FirstOrDefault();
 
             if (gerente == null)
             {
-                return;
+                return Result.Fail("Gerente não encontrado.");
             }
 
             _mapper.Map(updateGerenteDto, gerente);
             
             _context.SaveChanges();
 
-            return;
+            return Result.Ok();
         }
 
-        public void DeletarGerentePorId(int gerenteId)
+        public Result DeletarGerentePorId(int gerenteId)
         {
             var gerente = _context.Gerentes.Where(x => x.Id == gerenteId).FirstOrDefault();
 
             if (gerente == null)
             {
-                return;
+                return Result.Fail("Gerente não encontrado.");
             }
 
             _context.Gerentes.Remove(gerente);
             _context.SaveChanges();
 
-            return;
+            return Result.Ok();
         }
     }
 }

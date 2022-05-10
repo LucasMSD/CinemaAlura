@@ -18,31 +18,51 @@ namespace FilmesAPI.Controllers
         [HttpPost]
         public IActionResult AdicionarCinema([FromBody] CreateCinemaDto createCinemaDto)
         {
-            var cinema = _service.AdicionarCinema(createCinemaDto);
+            var result = _service.AdicionarCinema(createCinemaDto);
 
-            return CreatedAtAction(nameof(RecuperarCinemaPorId), new { Id = cinema.Id }, cinema);
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
+
+            return CreatedAtAction(nameof(RecuperarCinemaPorId), new { Id = result.Value.Id }, result.Value);
         }
 
         [HttpGet("{id}")]
         public IActionResult RecuperarCinemaPorId(int cinemaId)
         {
-            var readCinemaDto = _service.RecuperarCinemaPorId(cinemaId);
+            var result = _service.RecuperarCinemaPorId(cinemaId);
 
-            return Ok(readCinemaDto);
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
+
+            return Ok(result.Value);
         }
 
         [HttpGet]
-        public IActionResult RecuperarCinemas()
+        public IActionResult RecuperarCinemas([FromQuery] string filmeTitulo)
         {
-            var readCinemaDtoList = _service.RecuperarCinemas();
+            var result = _service.RecuperarCinemas(filmeTitulo);
 
-            return Ok(readCinemaDtoList);
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
+
+            return Ok(result.Value);
         }
 
         [HttpPut("{id}")]
         public IActionResult AtualizarCinemaPorId(int cinemaId, [FromBody] UpdateCinemaDto updateCinemaDto)
         {
-            _service.AtualizarCinemaPorId(cinemaId, updateCinemaDto);
+            var result = _service.AtualizarCinemaPorId(cinemaId, updateCinemaDto);
+
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }
@@ -50,7 +70,12 @@ namespace FilmesAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeletarCinemaPorId(int cinemaId)
         {
-            _service.DeletarCinemaPorId(cinemaId);
+            var result = _service.DeletarCinemaPorId(cinemaId);
+
+            if (result.IsFailed)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }

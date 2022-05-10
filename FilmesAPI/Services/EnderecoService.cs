@@ -2,6 +2,7 @@
 using FilmesAPI.Data;
 using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;
+using FluentResults;
 
 namespace FilmesAPI.Services
 {
@@ -16,68 +17,68 @@ namespace FilmesAPI.Services
             _mapper = mapper;
         }
 
-        public Endereco AdicionarEndereco(CreateEnderecoDto createEnderecoDto)
+        public Result<Endereco> AdicionarEndereco(CreateEnderecoDto createEnderecoDto)
         {
             var endereco = _mapper.Map<Endereco>(createEnderecoDto);
 
             _context.Enderecos.Add(endereco);
             _context.SaveChanges();
 
-            return endereco;
+            return Result.Ok(endereco);
         }
 
-        public ReadEnderecoDto? RecuperarEnderecoPorId(int enderecoId)
+        public Result<ReadEnderecoDto> RecuperarEnderecoPorId(int enderecoId)
         {
             var endereco = _context.Enderecos.Where(x => x.Id == enderecoId).FirstOrDefault();
 
             if (endereco == null)
             {
-                return null;
+                return Result.Fail("Endereco não encontrato.");
             }
 
             var readEnderecoDto = _mapper.Map<ReadEnderecoDto>(endereco);
 
-            return readEnderecoDto;
+            return Result.Ok(readEnderecoDto);
         }
 
-        public IEnumerable<ReadEnderecoDto> RecuperarEnderecos()
+        public Result<List<ReadEnderecoDto>> RecuperarEnderecos()
         {
             var enderecos = _context.Enderecos.ToList();
 
             var readEnderecoDtoList = _mapper.Map<List<ReadEnderecoDto>>(enderecos);
 
-            return readEnderecoDtoList;
+            return Result.Ok(readEnderecoDtoList);
         }
 
-        public void AtualizarEnderecoPorId(int enderecoId, UpdateEnderecoDto updateEnderecoDto)
+        public Result AtualizarEnderecoPorId(int enderecoId, UpdateEnderecoDto updateEnderecoDto)
         {
             var endereco = _context.Enderecos.Where(x => x.Id == enderecoId).FirstOrDefault();
 
             if (endereco == null)
             {
-                return;
+                return Result.Fail("Endereco não encontrado.");
             }
 
             _mapper.Map(updateEnderecoDto, endereco);
 
             _context.SaveChanges();
 
-            return;
+            return Result.Ok();
         }
 
-        public void DeletarEnderecoPorId(int enderecoId)
+        public Result DeletarEnderecoPorId(int enderecoId)
         {
             var endereco = _context.Enderecos.Where(x => x.Id == enderecoId).FirstOrDefault();
 
             if (endereco == null)
             {
-                return;
+                return Result.Fail("Endereco não encontrado.");
             }
 
             _context.Enderecos.Remove(endereco);
             _context.SaveChanges();
 
-            return;
+            return Result.Ok();
         }
     }
 }
