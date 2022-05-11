@@ -28,7 +28,7 @@ namespace FilmesAPI.Controllers
             return CreatedAtAction(nameof(RecuperarGerentePorId), new { Id = result.Value.Id }, result.Value);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{gerenteId}")]
         public IActionResult RecuperarGerentePorId(int gerenteId)
         {
             var result = _service.RecuperarGerentePorId(gerenteId);
@@ -54,7 +54,7 @@ namespace FilmesAPI.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{gerenteId}")]
         public IActionResult AtualizarGerentePorId(int gerenteId, [FromBody] UpdateGerenteDto udpateGerenteDto)
         {
             var result = _service.AtualizarGerentePorId(gerenteId, udpateGerenteDto);
@@ -67,7 +67,7 @@ namespace FilmesAPI.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{gerenteId}")]
         public IActionResult DeletarGerentePorId(int gerenteId)
         {
             var result = _service.DeletarGerentePorId(gerenteId);

@@ -28,7 +28,7 @@ namespace FilmesAPI.Controllers
             return CreatedAtAction(nameof(RecuperarEnderecoPorId), new { Id = result.Value.Id }, result.Value);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{enderecoId}")]
         public IActionResult RecuperarEnderecoPorId(int enderecoId)
         {
             var result = _service.RecuperarEnderecoPorId(enderecoId);
@@ -54,7 +54,7 @@ namespace FilmesAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{enderecoId}")]
         public IActionResult AtualizarEnderecoPorId(int enderecoId, [FromBody] UpdateEnderecoDto updateEnderecoDto)
         {
             var result = _service.AtualizarEnderecoPorId(enderecoId, updateEnderecoDto);
@@ -67,7 +67,7 @@ namespace FilmesAPI.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{enderecoId}")]
         public IActionResult DeletarEnderecoPorId(int enderecoId)
         {
             var result = _service.DeletarEnderecoPorId(enderecoId);

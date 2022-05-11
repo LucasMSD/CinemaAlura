@@ -44,7 +44,7 @@ namespace FilmesAPI.Services
 
         public Result<List<ReadFilmeDto>>RecuperarFilmes(int? classificacaoEtaria)
         {
-            var filmes = _context.Filmes.Where(x => classificacaoEtaria == null || x.ClassificacaoEtaria == classificacaoEtaria);
+            var filmes = _context.Filmes.Where(x => classificacaoEtaria == null || x.ClassificacaoEtaria == classificacaoEtaria).ToList();
 
             var readFilmeDtoList = _mapper.Map<List<ReadFilmeDto>>(filmes);
 

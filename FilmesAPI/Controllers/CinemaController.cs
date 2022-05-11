@@ -28,7 +28,7 @@ namespace FilmesAPI.Controllers
             return CreatedAtAction(nameof(RecuperarCinemaPorId), new { Id = result.Value.Id }, result.Value);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{cinemaId}")]
         public IActionResult RecuperarCinemaPorId(int cinemaId)
         {
             var result = _service.RecuperarCinemaPorId(cinemaId);
@@ -42,7 +42,7 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult RecuperarCinemas([FromQuery] string filmeTitulo)
+        public IActionResult RecuperarCinemas([FromQuery] string? filmeTitulo)
         {
             var result = _service.RecuperarCinemas(filmeTitulo);
 
@@ -54,7 +54,7 @@ namespace FilmesAPI.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{cinemaId}")]
         public IActionResult AtualizarCinemaPorId(int cinemaId, [FromBody] UpdateCinemaDto updateCinemaDto)
         {
             var result = _service.AtualizarCinemaPorId(cinemaId, updateCinemaDto);
@@ -67,7 +67,7 @@ namespace FilmesAPI.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{cinemaId}")]
         public IActionResult DeletarCinemaPorId(int cinemaId)
         {
             var result = _service.DeletarCinemaPorId(cinemaId);

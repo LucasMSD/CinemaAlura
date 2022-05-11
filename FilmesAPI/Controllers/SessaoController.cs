@@ -28,7 +28,7 @@ namespace FilmesAPI.Controllers
             return CreatedAtAction(nameof(RecuperarSessaoPorId), new { Id = result.Value.Id }, result.Value);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{sessaoId}")]
         public IActionResult RecuperarSessaoPorId(int sessaoId)
         {
             var result = _service.RecuperarSessaoPorId(sessaoId);
@@ -54,7 +54,7 @@ namespace FilmesAPI.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{sessaoId}")]
         public IActionResult AtualizarSessaoPorId(int sessaoId, [FromBody] UpdateSessaoDto updateSessaoDto)
         {
             var result = _service.AtualizarSessaoPorId(sessaoId, updateSessaoDto);
@@ -67,7 +67,7 @@ namespace FilmesAPI.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{sessaoId}")]
         public IActionResult DeletarSessaoPorId(int sessaoId)
         {
             var result = _service.DeletarSessaoPorId(sessaoId);

@@ -41,12 +41,12 @@ namespace FilmesAPI.Services
             return Result.Ok(readCinemaDto);
         }
 
-        public Result<List<ReadCinemaDto>> RecuperarCinemas(string filmeTitulo)
+        public Result<List<ReadCinemaDto>> RecuperarCinemas(string? filmeTitulo)
         {
-            //_context.Cinemas.Where(x => x.Sessoes.Any(sessao => sessao.Filme.Titulo == filmeTitulo));
-            var cinemas = from cinema in _context.Cinemas
-                         where cinema.Sessoes.Any(sessao => string.IsNullOrEmpty(filmeTitulo) || sessao.Filme.Titulo == filmeTitulo)
-                         select cinema;
+            var cinemas = _context.Cinemas.Where(x => x.Sessoes.Any(sessao => filmeTitulo == null || sessao.Filme.Titulo == filmeTitulo)).ToList();
+            //var cinemas = from cinema in _context.Cinemas
+            //             where cinema.Sessoes.Any(sessao => string.IsNullOrEmpty(filmeTitulo) || sessao.Filme.Titulo == filmeTitulo)
+            //             select cinema;
 
             var readCinemaDtoList = _mapper.Map<List<ReadCinemaDto>>(cinemas);
 
