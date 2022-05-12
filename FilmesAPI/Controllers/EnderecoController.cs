@@ -25,7 +25,7 @@ namespace FilmesAPI.Controllers
                 return NotFound();
             }
 
-            return CreatedAtAction(nameof(RecuperarEnderecoPorId), new { Id = result.Value.Id }, result.Value);
+            return CreatedAtAction(nameof(RecuperarEnderecoPorId), new { EnderecoId = result.Value.Id }, result.Value);
         }
 
         [HttpGet("{enderecoId}")]
@@ -51,7 +51,7 @@ namespace FilmesAPI.Controllers
                 return NotFound();
             }
 
-            return Ok(result);
+            return Ok(result.Value);
         }
 
         [HttpPut("{enderecoId}")]

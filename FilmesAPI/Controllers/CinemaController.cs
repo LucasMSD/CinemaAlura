@@ -25,7 +25,7 @@ namespace FilmesAPI.Controllers
                 return NotFound();
             }
 
-            return CreatedAtAction(nameof(RecuperarCinemaPorId), new { Id = result.Value.Id }, result.Value);
+            return CreatedAtAction(nameof(RecuperarCinemaPorId), new { CinemaId = result.Value.Id }, result.Value);
         }
 
         [HttpGet("{cinemaId}")]
