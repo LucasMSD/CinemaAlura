@@ -1,9 +1,14 @@
-﻿namespace FilmesAPI.Data.Dtos
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FilmesAPI.Data.Dtos
 {
     public class UpdateSessaoDto
     {
-        public int Id { get; set; }
+        [Required]
         public int CinemaId { get; set; }
+        [Required]
         public int FilmeId { get; set; }
+        [Required]
+        public DateTime HorarioDeInicio { get; set; }
     }
 }

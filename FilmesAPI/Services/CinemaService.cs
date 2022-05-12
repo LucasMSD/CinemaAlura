@@ -44,9 +44,9 @@ namespace FilmesAPI.Services
         public Result<List<ReadCinemaDto>> RecuperarCinemas(string? filmeTitulo)
         {
             //var cinemas = _context.Cinemas.Where(x => x.Sessoes.Any(sessao => string.IsNullOrEmpty(filmeTitulo) || sessao.Filme.Titulo == filmeTitulo)).ToList();
-            var cinemas = from cinema in _context.Cinemas
-                          where cinema.Sessoes.Any(sessao => true)
-                          select cinema;
+            var cinemas = (from cinema in _context.Cinemas
+                          where string.IsNullOrEmpty(filmeTitulo) || cinema.Sessoes.Any(sessao => sessao.Filme.Titulo == filmeTitulo)
+                          select cinema).ToList();
 
             var readCinemaDtoList = _mapper.Map<List<ReadCinemaDto>>(cinemas);
 

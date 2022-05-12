@@ -38,6 +38,7 @@ namespace FilmesAPI.Services
             }
 
             var readFilmeDto = _mapper.Map<ReadFilmeDto>(filme);
+            readFilmeDto.HoraDaConsulta = DateTime.Now;
 
             return Result.Ok(readFilmeDto);
         }
@@ -47,6 +48,7 @@ namespace FilmesAPI.Services
             var filmes = _context.Filmes.Where(x => classificacaoEtaria == null || x.ClassificacaoEtaria == classificacaoEtaria).ToList();
 
             var readFilmeDtoList = _mapper.Map<List<ReadFilmeDto>>(filmes);
+            readFilmeDtoList.ForEach(readFilmeDto => readFilmeDto.HoraDaConsulta = DateTime.Now);
 
             return Result.Ok(readFilmeDtoList);
         }

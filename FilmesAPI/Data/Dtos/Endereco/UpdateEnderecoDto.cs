@@ -4,9 +4,6 @@ namespace FilmesAPI.Data.Dtos
 {
     public class UpdateEnderecoDto
     {
-        [Key]
-        [Required]
-        public int Id { get; set; }
         [Required(ErrorMessage = "O campo de logradouro é obrigatório.")]
         public string Logradouro { get; set; }
         [Required(ErrorMessage = "O campo de bairro é obrigatório.")]
