@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UsuariosApi.Data.Dtos;
+using UsuariosApi.Data.Requests;
 using UsuariosApi.Services;
 
 namespace UsuariosApi.Controllers
@@ -16,9 +17,22 @@ namespace UsuariosApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult CadastrarUsuraio(CreateUsuarioDto createUsuarioDto)
+        public IActionResult CadastrarUsuraio([FromBody] CreateUsuarioDto createUsuarioDto)
         {
             var result = _service.CadastrarUsuario(createUsuarioDto);
+
+            if (result.IsFailed)
+            {
+                return StatusCode(500);
+            }
+
+            return Ok(result.Successes[0]);
+        }
+
+        [HttpGet("/ativar")]
+        public IActionResult AtivarContaUsuario([FromQuery] AtivarContaRequest ativarContaRequest)
+        {
+            var result = _service.AtivarContaUsuario(ativarContaRequest);
 
             if (result.IsFailed)
             {

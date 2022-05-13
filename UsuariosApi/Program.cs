@@ -5,13 +5,21 @@ using UsuariosApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureAppConfiguration((context, builder) => builder.AddUserSecrets<Program>());
+
 // Add services to the container.
 
 builder.Services.AddDbContext<UserDbContext>(opts =>
     opts.UseMySql(builder.Configuration.GetConnectionString("UsuarioConnection"), new MySqlServerVersion(new Version(8, 0, 27))));
-builder.Services.AddIdentity<IdentityUser<int>, IdentityRole<int>>()
-        .AddEntityFrameworkStores<UserDbContext>();
+builder.Services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(
+        opts => opts.SignIn.RequireConfirmedEmail = true)
+        .AddEntityFrameworkStores<UserDbContext>()
+        .AddDefaultTokenProviders();
 builder.Services.AddScoped<CadastroService, CadastroService>();
+builder.Services.AddScoped<LoginService, LoginService>();
+builder.Services.AddScoped<TokenService, TokenService>();
+builder.Services.AddScoped<LogoutService, LogoutService>();
+builder.Services.AddScoped<EmailService, EmailService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
