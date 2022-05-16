@@ -2,28 +2,29 @@
 using Microsoft.AspNetCore.Identity;
 using System.Web;
 using UsuariosApi.Data.Requests;
+using UsuariosApi.Models;
 
 namespace UsuariosApi.Services
 {
     public class LoginService
     {
-        private SignInManager<IdentityUser<int>> _signInManager;
+        private SignInManager<CustomIdentityUser> _signInManager;
         private TokenService _tokenService;
         private EmailService _emailService;
 
-        public LoginService(SignInManager<IdentityUser<int>> signInManager, TokenService tokenService, EmailService service)
+        public LoginService(SignInManager<CustomIdentityUser> signInManager, TokenService tokenService, EmailService service)
         {
             _signInManager = signInManager;
             _tokenService = tokenService;
             _emailService = service;
         }
 
-        public IdentityUser<int> RecuperarUsuarioPorEmail(string email)
+        public CustomIdentityUser RecuperarUsuarioPorEmail(string email)
         {
             return _signInManager.UserManager.Users.FirstOrDefault(user => user.NormalizedEmail == email.ToUpper());
         }
 
-        public IdentityUser<int> RecuperarUsuarioPorUserName(string userName)
+        public CustomIdentityUser RecuperarUsuarioPorUserName(string userName)
         {
             return _signInManager.UserManager.Users.FirstOrDefault(user => user.NormalizedUserName == userName.ToUpper());
         }

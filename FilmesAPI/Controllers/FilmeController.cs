@@ -17,7 +17,7 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public IActionResult AdicionarFilme([FromBody] CreateFilmeDto createFilmeDto)
         {
             var result = _service.AdicionarFilme(createFilmeDto);
@@ -31,6 +31,7 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet("{filmeId}")]
+        [Authorize(Roles = "admin, regular")]
         public IActionResult RecuperarFilmePorId(int filmeId)
         {
             var result = _service.RecuperarFilmePorId(filmeId);
@@ -44,6 +45,7 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin, regular", Policy = "IdadeMinima")]
         public IActionResult RecuperarFilmes([FromQuery] int? classificacaoEtaria)
         {
             var result = _service.RecuperarFilmes(classificacaoEtaria);

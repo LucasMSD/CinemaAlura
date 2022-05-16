@@ -7,10 +7,10 @@ namespace UsuariosApi.Services
 {
     public class UsuarioService
     {
-        private UserManager<IdentityUser<int>> _userManager;
+        private UserManager<CustomIdentityUser> _userManager;
         private IMapper _mapper;
 
-        public UsuarioService(UserManager<IdentityUser<int>> userManager, IMapper mapper)
+        public UsuarioService(UserManager<CustomIdentityUser> userManager, IMapper mapper)
         {
             _userManager = userManager;
             _mapper = mapper;

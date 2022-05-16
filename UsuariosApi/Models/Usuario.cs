@@ -11,5 +11,7 @@ namespace UsuariosApi.Models
         public string UserName { get; set; }
         [Required]
         public string Email { get; set; }
+        [Required]
+        public DateTime DataNascimento { get; set; }
     }
 }

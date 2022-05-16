@@ -11,31 +11,25 @@ namespace UsuariosApi.Services
 {
     public class CadastroService
     {
-        private UserDbContext _context;
         private IMapper _mapper;
-        private UserManager<IdentityUser<int>> _userManager;
+        private UserManager<CustomIdentityUser> _userManager;
         private EmailService _emailService;
-        private RoleManager<IdentityRole<int>> _roleManager;
 
-        public CadastroService(UserDbContext context, IMapper mapper, UserManager<IdentityUser<int>> userManager, EmailService emailService, RoleManager<IdentityRole<int>> roleManager)
+        public CadastroService(UserDbContext context, IMapper mapper, UserManager<CustomIdentityUser> userManager, EmailService emailService, RoleManager<IdentityRole<int>> roleManager)
         {
-            _context = context;
             _mapper = mapper;
             _userManager = userManager;
             _emailService = emailService;
-            _roleManager = roleManager;
         }
 
         public Result CadastrarUsuario(CreateUsuarioDto createUsuarioDto)
         {
             var usuario = _mapper.Map<Usuario>(createUsuarioDto);
-            var usuarioIdentity = _mapper.Map<IdentityUser<int>>(usuario);
+            var usuarioIdentity = _mapper.Map<CustomIdentityUser>(usuario);
 
             var resultIdentity = _userManager.CreateAsync(usuarioIdentity, createUsuarioDto.Password).Result;
 
-            var createRoleResult = _roleManager.CreateAsync(new IdentityRole<int>("Admin")).Result;
-
-            var userRoleResult = _userManager.AddToRoleAsync(usuarioIdentity, "Admin").Result;
+            _userManager.AddToRoleAsync(usuarioIdentity, "regular");
 
             if (resultIdentity.Succeeded)
             {
