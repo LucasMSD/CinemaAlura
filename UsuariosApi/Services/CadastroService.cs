@@ -15,13 +15,15 @@ namespace UsuariosApi.Services
         private IMapper _mapper;
         private UserManager<IdentityUser<int>> _userManager;
         private EmailService _emailService;
+        private RoleManager<IdentityRole<int>> _roleManager;
 
-        public CadastroService(UserDbContext context, IMapper mapper, UserManager<IdentityUser<int>> userManager, EmailService emailService)
+        public CadastroService(UserDbContext context, IMapper mapper, UserManager<IdentityUser<int>> userManager, EmailService emailService, RoleManager<IdentityRole<int>> roleManager)
         {
             _context = context;
             _mapper = mapper;
             _userManager = userManager;
             _emailService = emailService;
+            _roleManager = roleManager;
         }
 
         public Result CadastrarUsuario(CreateUsuarioDto createUsuarioDto)
@@ -29,9 +31,13 @@ namespace UsuariosApi.Services
             var usuario = _mapper.Map<Usuario>(createUsuarioDto);
             var usuarioIdentity = _mapper.Map<IdentityUser<int>>(usuario);
 
-            var resultIdentity = _userManager.CreateAsync(usuarioIdentity, createUsuarioDto.Password);
+            var resultIdentity = _userManager.CreateAsync(usuarioIdentity, createUsuarioDto.Password).Result;
 
-            if (resultIdentity.Result.Succeeded)
+            var createRoleResult = _roleManager.CreateAsync(new IdentityRole<int>("Admin")).Result;
+
+            var userRoleResult = _userManager.AddToRoleAsync(usuarioIdentity, "Admin").Result;
+
+            if (resultIdentity.Succeeded)
             {
                 var codigoAtivacao = _userManager.GenerateEmailConfirmationTokenAsync(usuarioIdentity).Result;
 
@@ -49,9 +55,9 @@ namespace UsuariosApi.Services
         {
             var identityUser = _userManager.Users.FirstOrDefault(user => user.Id == ativarContaRequest.UsuarioId);
 
-            var identityResyult = _userManager.ConfirmEmailAsync(identityUser, ativarContaRequest.CodigoAtivacao);
+            var identityResult = _userManager.ConfirmEmailAsync(identityUser, ativarContaRequest.CodigoAtivacao).Result;
 
-            if (identityResyult.Result.Succeeded)
+            if (identityResult.Succeeded)
             {
                 return Result.Ok();
             }
